@@ -45,7 +45,10 @@
     <div class="fill" id="container-js"></div>
   </label>
 </div>
-<button id="btn-execute">실행</button>
+<div class="hbox narrow">
+  <button class="fill" id="btn-execute">실행</button>
+  <button class="fill" id="btn-share">공유</button>
+</div>
 <div class="fill" id="playground"></div>
 <script src="./cetus.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.min.js"></script>
@@ -93,6 +96,7 @@ element.addEventListener("click", () => profile.showBelowElement(element))`
   const containerHTML = document.getElementById("container-html")
   const containerJS = document.getElementById("container-js")
   const buttonExecute = document.getElementById("btn-execute")
+  const buttonShare = document.getElementById("btn-share")
   const playground = document.getElementById("playground")
 
   require(["vs/editor/editor.main"], () => {
@@ -105,9 +109,22 @@ element.addEventListener("click", () => profile.showBelowElement(element))`
       useToast && Util.toast("갱신되었습니다.", 1000)
     }
 
+    async function share() {
+      const html = editorHTML.getValue().replace(/>\s+</g, '><').trim()
+      const js = await Util.compressJS(editorJS.getValue())
+      
+      const url = new URL(location.href)
+      url.searchParams.append("html", html)
+      url.searchParams.append("js", js)
+
+      await window.navigator.clipboard.writeText(url.toString())
+      Util.alert("클립보드에 저장되었습니다.")
+    }
+
     execute(false)
 
     buttonExecute.addEventListener("click", () => execute())
+    buttonShare.addEventListener("click", () => share())
     document.addEventListener("keydown", (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "b") {
         e.preventDefault()
