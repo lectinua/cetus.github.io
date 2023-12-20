@@ -92,6 +92,9 @@
 
 const element = document.querySelector(".profile")
 element.addEventListener("click", () => profile.showBelowElement(element))`
+    } else {
+      textJS = textJS.replaceAll(";", ";\n")
+      textJS = textJS.replaceAll(",", ",\n")
     }
 
     function create(element, value = "", language = "javascript") {
