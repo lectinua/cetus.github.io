@@ -3,136 +3,144 @@
 <head>
   <title>테스트</title>
   <style>
-      body {
-          padding: 1rem;
-      }
+    body {
+      padding: 1rem;
+    }
 
-      .code label {
-          padding: 0 !important;
-      }
+    body>div {
+      height: 100%;
+    }
 
-      .monaco-editor, .overflow-guard {
-          height: 100%;
-          border-radius: .5rem;
-      }
+    .code label {
+      padding: 0 !important;
+    }
 
-      .menus {
-          justify-content: center;
-          align-items: center;
-      }
+    .monaco-editor,
+    .overflow-guard {
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: .5rem;
+    }
 
-      .profile {
-          background-color: white !important;
-      }
+    .menus {
+      justify-content: center;
+      align-items: center;
+    }
 
-      #playground {
-          padding: 1rem;
-          border: 1px solid #94a3b8;
-          border-radius: .5rem;
-          box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-      }
+    .profile {
+      background-color: white !important;
+    }
+
+    #playground {
+      padding: 1rem;
+      border: 1px solid #94a3b8;
+      border-radius: .5rem;
+      box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    }
   </style>
 </head>
 
-<body class="vbox fill">
-<div class="fill card hbox">
-  <label class="code fill vbox narrow">
-    <h3>Html</h3>
-    <div class="fill" id="container-html"></div>
-  </label>
-  <label class="code fill vbox narrow">
-    <h3>Javascript</h3>
-    <div class="fill" id="container-js"></div>
-  </label>
-</div>
-<div class="hbox narrow">
-  <button class="fill" id="btn-execute">실행</button>
-  <button class="fill" id="btn-share">공유</button>
-</div>
-<div class="fill" id="playground"></div>
-<script src="./cetus.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.min.js"></script>
-<script type="module">
-  require.config({ paths: { "vs": "https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs" } })
+<body>
+  <div class="vbox fill">
+    <div class="fill hbox">
+      <label class="code fill vbox narrow">
+        <h3>Html</h3>
+        <div class="fill" id="container-html"></div>
+      </label>
+      <label class="code fill vbox narrow">
+        <h3>Javascript</h3>
+        <div class="fill" id="container-js"></div>
+      </label>
+    </div>
+    <div class="hbox narrow">
+      <button class="fill" id="btn-execute">실행</button>
+      <button class="fill" id="btn-share">공유</button>
+    </div>
+    <div class="fill" id="playground"></div>
+  </div>
+  <script src="./cetus.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.min.js"></script>
+  <script type="module">
+    require.config({ paths: { "vs": "https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs" } })
 
-  const params = new URLSearchParams(window.location.search)
-  let textHTML = params.get("html")
-  let textJS = params.get("js")
+    const params = new URLSearchParams(window.location.search)
+    let textHTML = params.get("html")
+    let textJS = params.get("js")
 
-  if (!textHTML && !textJS) {
-    textHTML = `<button class="profile">
+    if (!textHTML && !textJS) {
+      textHTML = `<button class="profile">
   <img class="profile-image" src="https://static.wikia.nocookie.net/fallout/images/9/9a/Kanawha_Mothman.png" alt="profile image">
   <div class="profile-box">
     <span class="font-bold">이름 (아이디)</span>
     <span>관리자</span>
   </div>
 </button>`
-    textJS = `const profile = c.context()
+      textJS = `const profile = c.context()
   .item("프로필", () => Util.alert("프로필"))
   .item("로그아웃", () => Util.alert("로그아웃"))
   .init()
 
 const element = document.querySelector(".profile")
 element.addEventListener("click", () => profile.showBelowElement(element))`
-  }
-
-  function create(element, value = "", language = "javascript") {
-    const editor = monaco.editor.create(element, {
-      value,
-      language,
-      theme: "vs-dark",
-      autoIndent: "full",
-      formatOnPaste: true,
-      minimap: {
-        autohide: true
-      }
-    })
-
-    setTimeout(() => editor.getAction("editor.action.formatDocument").run(), 1000)
-
-    return editor
-  }
-
-  const containerHTML = document.getElementById("container-html")
-  const containerJS = document.getElementById("container-js")
-  const buttonExecute = document.getElementById("btn-execute")
-  const buttonShare = document.getElementById("btn-share")
-  const playground = document.getElementById("playground")
-
-  require(["vs/editor/editor.main"], () => {
-    const editorHTML = create(containerHTML, textHTML, "html")
-    const editorJS = create(containerJS, textJS, "javascript")
-
-    function execute(useToast = true) {
-      playground.innerHTML = editorHTML.getValue() ?? ""
-      eval(editorJS.getValue() ?? "")
-      useToast && Util.toast("갱신되었습니다.", 1000)
     }
 
-    async function share() {
-      const html = editorHTML.getValue().replace(/>\s+</g, '><').trim()
-      const js = await Util.compressJS(editorJS.getValue())
-      
-      const url = new URL(location.href)
-      url.searchParams.append("html", html)
-      url.searchParams.append("js", js)
+    function create(element, value = "", language = "javascript") {
+      const editor = monaco.editor.create(element, {
+        value,
+        language,
+        theme: "vs-dark",
+        autoIndent: "full",
+        formatOnPaste: true,
+        minimap: {
+          autohide: true
+        }
+      })
 
-      await window.navigator.clipboard.writeText(url.toString())
-      Util.alert("클립보드에 저장되었습니다.")
+      setTimeout(() => editor.getAction("editor.action.formatDocument").run(), 1000)
+
+      return editor
     }
 
-    execute(false)
+    const containerHTML = document.getElementById("container-html")
+    const containerJS = document.getElementById("container-js")
+    const buttonExecute = document.getElementById("btn-execute")
+    const buttonShare = document.getElementById("btn-share")
+    const playground = document.getElementById("playground")
 
-    buttonExecute.addEventListener("click", () => execute())
-    buttonShare.addEventListener("click", () => share())
-    document.addEventListener("keydown", (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "b") {
-        e.preventDefault()
-        execute()
+    require(["vs/editor/editor.main"], () => {
+      const editorHTML = create(containerHTML, textHTML, "html")
+      const editorJS = create(containerJS, textJS, "javascript")
+
+      function execute(useToast = true) {
+        playground.innerHTML = editorHTML.getValue() ?? ""
+        eval(editorJS.getValue() ?? "")
+        useToast && Util.toast("갱신되었습니다.", 1000)
       }
+
+      async function share() {
+        const html = editorHTML.getValue().replace(/>\s+</g, '><').trim()
+        const js = await Util.compressJS(editorJS.getValue())
+
+        const url = new URL(location.href)
+        url.searchParams.append("html", html)
+        url.searchParams.append("js", js)
+
+        await window.navigator.clipboard.writeText(url.toString())
+        Util.alert("클립보드에 저장되었습니다.")
+      }
+
+      execute(false)
+
+      buttonExecute.addEventListener("click", () => execute())
+      buttonShare.addEventListener("click", () => share())
+      document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === "b") {
+          e.preventDefault()
+          execute()
+        }
+      })
     })
-  })
-</script>
+  </script>
 </body>
 
 </html>
