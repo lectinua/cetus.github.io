@@ -8,7 +8,12 @@
     }
 
     body>div {
-      height: 100%;
+      overflow: auto;
+      padding-bottom: 1rem;
+    }
+
+    .code {
+      min-height: 300px;
     }
 
     .code label {
@@ -18,7 +23,6 @@
     .monaco-editor,
     .overflow-guard {
       width: 100% !important;
-      height: 100% !important;
       border-radius: .5rem;
     }
 
@@ -29,6 +33,11 @@
 
     .profile {
       background-color: white !important;
+    }
+
+    .container {
+      flex: 1;
+      width: 100%;
     }
 
     #playground {
@@ -43,14 +52,14 @@
 
 <body>
   <div class="vbox fill">
-    <div class="fill hbox">
+    <div class="fill hbox gap-none">
       <label class="code fill vbox narrow">
         <h3>Html</h3>
-        <div class="fill" id="container-html"></div>
+        <div class="container" id="container-html"></div>
       </label>
       <label class="code fill vbox narrow">
         <h3>Javascript</h3>
-        <div class="fill" id="container-js"></div>
+        <div class="container" id="container-js"></div>
       </label>
     </div>
     <div class="hbox narrow">
