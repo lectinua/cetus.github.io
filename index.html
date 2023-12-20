@@ -132,6 +132,8 @@ element.addEventListener("click", () => profile.showBelowElement(element))`
         const js = await Util.compressJS(editorJS.getValue())
 
         const url = new URL(location.href)
+        url.searchParams.delete("html")
+        url.searchParams.delete("js")
         url.searchParams.append("html", html)
         url.searchParams.append("js", js)
 
