@@ -149,6 +149,7 @@ element.addEventListener("click", () => profile.showBelowElement(element))`
       url.searchParams.append("html", html)
       url.searchParams.append("js", js)
 
+      history.pushState(null, null, url)
       await window.navigator.clipboard.writeText(url.toString())
       Util.alert("클립보드에 저장되었습니다.")
     }
